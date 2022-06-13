@@ -1,0 +1,19 @@
+{
+  "name": "xueqiu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dayjs": "^1.11.3",
+    "koa": "^2.13.4",
+    "koa-mount": "^4.0.0",
+    "nodemon": "^2.0.16"
+  }
+}
