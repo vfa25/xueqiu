@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "cross-env NODE_ENV=development nodemon ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prd:setup": "pm2 deploy ecosystem.yaml production setup",
     "prd:deploy": "pm2 deploy ecosystem.yaml production"
@@ -17,5 +17,8 @@
     "koa": "^2.13.4",
     "koa-mount": "^4.0.0",
     "nodemon": "^2.0.16"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

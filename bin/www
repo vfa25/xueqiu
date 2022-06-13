@@ -4,34 +4,18 @@
  * Module dependencies.
  */
 
-var app = require('../index');
+var server = require('../index.js');
 var debug = require('debug')('blog-test_case:server');
 var http = require('http');
-
-/**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '6666');
-app.set('port', port);
-
-if (process.env.NODE_ENV === 'development') {
-  console.log(`Server listening on http://127.0.0.1:${port}, Ctrl+C to stop`)
-}
-
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+var port = normalizePort(process.env.PORT || 6666);
 server.on('error', onError);
 server.on('listening', onListening);
+server.listen(port);
 
 /**
  * Normalize a port into a number, string, or false.
