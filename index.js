@@ -170,6 +170,13 @@ app.use(
   })
 )
 
+app.use(
+  mount('/test', async (ctx) => {
+      ctx.status = 200;
+      ctx.body = 'success'
+  })
+)
+
 module.exports = app;
 
 
