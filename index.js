@@ -170,9 +170,8 @@ app.use(
   })
 )
 
-app.listen(12345, ()=> {
-  console.log('listened 12345')
-});
+module.exports = app;
+
 
 
 function getRate(end, start, type = 'string') {
