@@ -2,6 +2,7 @@ const axios = require('axios');
 const koa = require('koa');
 const mount = require('koa-mount');
 const dayjs = require('dayjs');
+const fs = require('fs');
 
 const HEADERS = {
   "accept": "*/*",
@@ -106,8 +107,9 @@ const CONFIGS = [
 const app = new koa;
 
 app.use(
-  mount('/', async (ctx) => {
+  mount('/api', async (ctx) => {
       ctx.status = 200;
+      console.log('访问 /api')
       const result = await Promise.all(CONFIGS.map(async (item) => {
         try {
           const response = await axios.get(BEFORE_URL, {
@@ -117,7 +119,7 @@ app.use(
               begin: Date.now(),
               period: 'day',
               type: 'before',
-              count: -10,
+              count: -11,
               indicator: 'kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance',
             }
           })
@@ -135,55 +137,50 @@ app.use(
               return total;
             }, {})
           })
+          const curNode = infoItems.splice(-1)[0];
           const beforeTimeSlot = `${infoItems[1].timestamp} - ${infoItems[infoItems.length - 1].timestamp}`;
           const beforeRate = getRate(infoItems[infoItems.length - 1].close, infoItems[0].close);
+          const allRate = getRate(curNode.close, infoItems[0].close);
           const result = {
             name: item.name,
             code: resData.symbol,
             beforeTimeSlot,
-            beforeRate
+            beforeRate,
+            allRate,
+            curRate: curNode.percent,
           };
-
-          const curResponse = await axios.get(CURRENT_URL, {
-            "headers": HEADERS,
-            params: {
-              symbol: item.code,
-              // extend: 'detail'
-            }
-          })
-          const curDataQuote = curResponse.data.data.quote;
-          // const curDataQuote = curResponse.data[0];
-          result.currentTime = dayjs(curDataQuote.timestamp).format('YYYY/MM/DD HH:mm:ss');
-          result.currentRate = `${curDataQuote.percent.toFixed(2)}%`;
-          result.allRate = getRate(curDataQuote.current, infoItems[0].close, 'number');
 
           return result;
         } catch (e) {
-          console.log('e', e)
+          console.log('e', item.name)
         }
       }))
       result.sort((a, b) => b && a && (b.allRate - a.allRate));
       ctx.body = result.map((item) => {
+        if (!item) {
+          return item;
+        }
         item.allRate = `${((item.allRate) * 100).toFixed(2)}%`;
+        item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}%`;
+        item.curRate = `${item.curRate}%`;
         return item;
       })
   })
 )
 
 app.use(
-  mount('/test', async (ctx) => {
-      ctx.status = 200;
-      ctx.body = 'success'
+  mount('/', async (ctx) => {
+    let originalUrl = ctx && ctx.originalUrl;
+    if (!originalUrl || originalUrl === '/') {
+      originalUrl = '/index.html'
+    }
+    ctx.status = 200;
+    ctx.body = fs.readFileSync(__dirname + originalUrl, 'utf-8')
   })
 )
 
 module.exports = app;
 
-
-
-function getRate(end, start, type = 'string') {
-  if (type === 'number') {
-    return ((end - start) / start).toFixed(5);
-  }
-  return `${(((end - start) / start) * 100).toFixed(2)}%`;
+function getRate(end, start) {
+  return ((end - start) / start).toFixed(4);
 }
