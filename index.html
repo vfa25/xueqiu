@@ -73,7 +73,7 @@
   }
 
   function sorter(fieldA, fieldB) {
-    return Number(fieldA.replace('%', '')) - Number(fieldB.replace('%', ''));
+    return Number(fieldA.replace(/%.*$/, '')) - Number(fieldB.replace(/%.*$/, ''));
   }
 </script>
 

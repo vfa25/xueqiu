@@ -148,6 +148,8 @@ app.use(
             beforeRate,
             allRate,
             curRate: curNode.percent,
+            startValue: infoItems[0].close,
+            nineCloseValue: infoItems[infoItems.length - 1].close,
           };
 
           return result;
@@ -161,7 +163,7 @@ app.use(
           return item;
         }
         item.allRate = `${((item.allRate) * 100).toFixed(2)}%`;
-        item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}%`;
+        item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}% （${item.startValue}-${item.nineCloseValue}）`;
         item.curRate = `${item.curRate}%`;
         return item;
       })
