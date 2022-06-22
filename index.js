@@ -164,6 +164,7 @@ app.use(
         }
         item.allRate = `${((item.allRate) * 100).toFixed(2)}%`;
         item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}%`;
+        item.fiveRate = `${((item.fiveRate) * 100).toFixed(2)}%`;
         item.curRate = `${item.curRate}%`;
         return item;
       })
