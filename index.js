@@ -141,14 +141,15 @@ app.use(
           const beforeTimeSlot = `${infoItems[1].timestamp} - ${infoItems[infoItems.length - 1].timestamp}`;
           const beforeRate = getRate(infoItems[infoItems.length - 1].close, infoItems[0].close);
           const allRate = getRate(curNode.close, infoItems[0].close);
+          const fiveRate = getRate(curNode.close, infoItems[5].close);
           const result = {
             name: item.name,
             code: resData.symbol,
             beforeTimeSlot,
             beforeRate,
             allRate,
+            fiveRate,
             curRate: curNode.percent,
-            nineChange: `${infoItems[0].close}（${infoItems[0].timestamp && infoItems[0].timestamp.replace(/^\d+\//, '')}收）- ${infoItems[infoItems.length - 1].close}（${infoItems[infoItems.length - 1].timestamp && infoItems[infoItems.length - 1].timestamp.replace(/^\d+\//, '')}收）`
           };
 
           return result;
