@@ -15,7 +15,7 @@ const HEADERS = {
   "sec-fetch-dest": "empty",
   "sec-fetch-mode": "cors",
   "sec-fetch-site": "same-site",
-  "cookie": "acw_tc=276077b016569504139411468e4440a55de6cfc7e3da04684ca4f2fb97dd33; xq_a_token=fb258a8752383013c5b5b5492aea4de18508044c; xqat=fb258a8752383013c5b5b5492aea4de18508044c; xq_r_token=9a89a07d59400026c830b71209c77f8f44b2824e; xq_id_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOi0xLCJpc3MiOiJ1YyIsImV4cCI6MTY1OTIyMzk0MiwiY3RtIjoxNjU2OTUwMzgxMzQ0LCJjaWQiOiJkOWQwbjRBWnVwIn0.GWR3wKTlcrvMn5wZyNO2ntceiAhqyGLWaJCpfRRmUUvzqZ0CPNvZF_SYwYf251WOBM7RXe1IBRsfl95ARJNtfUAgCEclIU3TJ_N7Oaia2kgVSoKOq9cfwfoII4TcloZtiUEEqEz5ZWeGhYvQNBJ9M3KGld2RgweHbMlLqp5XKQK2hePLaIUD6nD21dns9AckWMFKTdTzd_06_wtr7wBDFVVQfvY6X0Rq4WhaEmqkgKPKAMNwwWY_fBoY7ghD5iA-wJonQJobHiBjyW9CjEHG1pRMwUjmOSa6A_4v3ZuCwadUfTTZy4PCqButbGJ2ZaF2yjy81Y-ShVu3ZJDsaguyww; u=301656950413949; is_overseas=0; Hm_lvt_1db88642e346389874251b5a1eded6e3=1654923205; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1656950419; device_id=fdc58ff81c7f9adfb645308188f8364a",
+  "cookie": fs.readFileSync(__dirname + '/cookie.txt', 'utf-8'),
   "Referer": "https://xueqiu.com/S/CSI931151",
 };
 const BEFORE_URL = 'https://stock.xueqiu.com/v5/stock/chart/kline.json';
