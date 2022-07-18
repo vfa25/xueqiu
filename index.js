@@ -4,6 +4,10 @@ const mount = require('koa-mount');
 const dayjs = require('dayjs');
 const fs = require('fs');
 
+const EXT = {
+  'css': 'text/css',
+  'js': 'text/js'
+}
 const HEADERS = {
   "accept": "*/*",
   "accept-language": "en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7",
@@ -15,7 +19,6 @@ const HEADERS = {
   "sec-fetch-dest": "empty",
   "sec-fetch-mode": "cors",
   "sec-fetch-site": "same-site",
-  "cookie": fs.readFileSync(__dirname + '/cookie.txt', 'utf-8'),
   "Referer": "https://xueqiu.com/S/CSI931151",
 };
 const BEFORE_URL = 'https://stock.xueqiu.com/v5/stock/chart/kline.json';
@@ -110,10 +113,12 @@ app.use(
   mount('/api', async (ctx) => {
       ctx.status = 200;
       console.log('访问 /api')
+      const headers = { ...HEADERS };
+      headers.cookie = fs.readFileSync(__dirname + '/cookie.txt', 'utf-8');
       const result = await Promise.all(CONFIGS.map(async (item) => {
         try {
           const response = await axios.get(BEFORE_URL, {
-            "headers": HEADERS,
+            headers,
             params: {
               symbol: item.code,
               begin: Date.now(),
@@ -193,6 +198,7 @@ app.use(
       originalUrl = '/index.html'
     } else {
       ctx.set('cache-control', 'public, max-age=31536000');
+      ctx.set('content-type', `${EXT[originalUrl.replace(/^.*\.(.*)$/, '$1')]}; charset=utf-8`);
     }
     ctx.status = 200;
     ctx.body = fs.readFileSync(__dirname + originalUrl, 'utf-8')
