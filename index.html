@@ -39,15 +39,9 @@
     }, {
       field: 'name',
       title: '名称',
-    }, {
-      field: 'code',
-      title: '编码',
-    }, {
-      field: 'curRate',
-      title: '今日幅度',
-      sortable: true,
-      cellStyle,
-      sorter,
+      formatter(value, row, index) {
+        return value + '\n' + '(' +row.code + ')';
+      }
     }, {
       field: 'allRate',
       title: '10日幅度（含今天）',
@@ -57,6 +51,12 @@
     }, {
       field: 'curWeekRate',
       title: '本周幅度',
+      sortable: true,
+      cellStyle,
+      sorter,
+    }, {
+      field: 'curRate',
+      title: '今日幅度',
       sortable: true,
       cellStyle,
       sorter,
