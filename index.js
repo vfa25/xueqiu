@@ -159,7 +159,7 @@ app.use(
           const allRate = getRate(curNode.close, infoItems[0].close);
           const fiveRate = getRate(curNode.close, infoItems[5].close);
           const curWeekRate = nearLessItem && curWeekItems.length && getRate(curWeekItems[curWeekItems.length-1].close, nearLessItem.close);
-          console.log('单次请求', result);
+
           const result = {
             name: item.name,
             code: resData.symbol,
@@ -170,7 +170,7 @@ app.use(
             curRate: curNode.percent,
             curWeekRate: curWeekRate || 0,
           };
-
+          console.log('单次请求', result);
           return result;
         } catch (e) {
           console.log('e', item.name, e)
