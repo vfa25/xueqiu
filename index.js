@@ -159,7 +159,7 @@ app.use(
           const allRate = getRate(curNode.close, infoItems[0].close);
           const fiveRate = getRate(curNode.close, infoItems[5].close);
           const curWeekRate = nearLessItem && curWeekItems.length && getRate(curWeekItems[curWeekItems.length-1].close, nearLessItem.close);
-
+          console.log('单次请求', result);
           const result = {
             name: item.name,
             code: resData.symbol,
