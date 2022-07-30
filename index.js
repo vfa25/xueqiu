@@ -119,8 +119,8 @@ app.use(
       if (fs.existsSync(__dirname + '/preWeek.txt')) {
         cacheSelectedStr = fs.readFileSync(__dirname + '/preWeek.txt', 'utf-8');
       }
-      console.log('preWeek读文件', cacheSelectedStr);
-      const cacheSelectedItems = cacheSelectedStr && cacheSelectedStr.split('\t\n') || [];
+      const cacheSelectedItems = (cacheSelectedStr && cacheSelectedStr.split('\t\n') || []).map((item) => item.trim()).filter(item => item);
+      console.log('preWeek读文件', cacheSelectedItems);
       let result = await Promise.all(CONFIGS.map(async (item) => {
         try {
           const response = await axios.get(BEFORE_URL, {
