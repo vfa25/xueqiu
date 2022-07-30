@@ -119,6 +119,7 @@ app.use(
       if (fs.existsSync(__dirname + '/preWeek.txt')) {
         cacheSelectedStr = fs.readFileSync(__dirname + '/preWeek.txt', 'utf-8');
       }
+      console.log('preWeek读文件', cacheSelectedStr);
       const cacheSelectedItems = cacheSelectedStr && cacheSelectedStr.split('\t\n') || [];
       let result = await Promise.all(CONFIGS.map(async (item) => {
         try {
@@ -176,10 +177,10 @@ app.use(
             curWeekRate: curWeekRate || 0,
             preWeekSelected: cacheSelectedItems.includes(resData.symbol)
           };
-          console.log('单次请求', result);
+          console.log('单次请求', result.name);
           return result;
         } catch (e) {
-          console.log('e', item.name, e)
+          console.log('error', item.name, e)
         }
       }))
       result = result.filter((item) => item);
@@ -188,6 +189,7 @@ app.use(
       const newDate = new Date;
       if (newDate.getDay() === 1 && newDate.getHours() === 8) {
         fs.writeFileSync(__dirname + '/preWeek.txt', selectedItems.join('\t\n'));
+        console.log('preWeek写文件', selectedItems.join('\n'));
       }
       result.push((() => {
         const preWeekSelected = result.filter((item) => item.preWeekSelected)
@@ -195,12 +197,10 @@ app.use(
           name: '平均',
           isAverage: true,
           curWeekRate: result.reduce((total, item) => {
-            console.log(item.curWeekRate)
             total += Number(item.curWeekRate);
             return total;
           }, 0) / result.length,
           preWeekSelected: `${((preWeekSelected.reduce((total, item) => {
-            console.log(item.curWeekRate)
             total += Number(item.curWeekRate);
             return total;
           }, 0) / preWeekSelected.length) * 100).toFixed(2)}%`
