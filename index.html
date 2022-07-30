@@ -30,46 +30,58 @@
     dataType: "json",
     sortName: 'allRate',
     sortOrder: 'desc',
+    rowStyle: rowStyle,
     columns: [{
       field: '',
       title: '序号',
       formatter(value, row, index) {
-        return index + 1;
+        return !row.isAverage && index + 1 || '';
       }
     }, {
       field: 'name',
-      title: '名称',
+      title: '指数',
       formatter(value, row, index) {
-        return value + '\n' + '(' +row.code + ')';
+        return row.code ? (value + '\n' + '(' +row.code + ')') : value;
       }
     }, {
       field: 'allRate',
-      title: '10日幅度（含今天）',
+      title: '10日',
+      align : 'center',
       sortable: true,
       cellStyle,
       sorter,
     }, {
       field: 'curWeekRate',
-      title: '本周幅度',
-      sortable: true,
-      cellStyle,
-      sorter,
-    }, {
-      field: 'curRate',
-      title: '今日幅度',
+      title: '本周',
+      align : 'center',
       sortable: true,
       cellStyle,
       sorter,
     }, {
       field: 'fiveRate',
-      title: '5日幅度（含今天）',
+      title: '5日',
+      align : 'center',
       sortable: true,
       cellStyle,
       sorter,
+    }, {
+      field: 'preWeekSelected',
+      title: '上周入选',
+      align : 'center',
+      cellStyle,
+      formatter(value) {
+        if (typeof value === 'string') {
+          return value;
+        }
+        return value && '✅' || '';
+      }
     }]
   })
 
   function cellStyle(value, row, index, field) {
+    if (!value) {
+      return {css: null};
+    }
     if (field === 'nineChange') {
       value = row.beforeRate;
     }
@@ -77,15 +89,34 @@
       value = value.replace(/%.*$/, '');
     }
     const frontColor = value >= 0 ? '#d20' : '#093';
+    const rowCss = rowStyle(row, index).css;
     return {
       css: {
+        ...rowCss,
         color: frontColor
       }
     }
   }
 
-  function sorter(fieldA, fieldB) {
+  function sorter(fieldA, fieldB, dataA, dataB) {
+    if (dataA.isAverage || dataB.isAverage) {
+      return 0;
+    }
     return Number(fieldA.replace(/%.*$/, '')) - Number(fieldB.replace(/%.*$/, ''));
+  }
+
+  function rowStyle(row,index) {
+    if (row.isAverage) {
+      return {
+        css: {
+          background: '#CCC',
+          border: 'none',
+        }
+      }
+    }
+    return {
+      css: null
+    }
   }
 </script>
 

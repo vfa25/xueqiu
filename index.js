@@ -115,7 +115,12 @@ app.use(
       console.log('访问 /api')
       const headers = { ...HEADERS };
       headers.cookie = fs.readFileSync(__dirname + '/cookie.txt', 'utf-8');
-      const result = await Promise.all(CONFIGS.map(async (item) => {
+      let cacheSelectedStr = null;
+      if (fs.existsSync(__dirname + '/preWeek.txt')) {
+        cacheSelectedStr = fs.readFileSync(__dirname + '/preWeek.txt', 'utf-8');
+      }
+      const cacheSelectedItems = cacheSelectedStr && cacheSelectedStr.split('\t\n') || [];
+      let result = await Promise.all(CONFIGS.map(async (item) => {
         try {
           const response = await axios.get(BEFORE_URL, {
             headers,
@@ -169,6 +174,7 @@ app.use(
             fiveRate,
             curRate: curNode.percent,
             curWeekRate: curWeekRate || 0,
+            preWeekSelected: cacheSelectedItems.includes(resData.symbol)
           };
           console.log('单次请求', result);
           return result;
@@ -176,16 +182,39 @@ app.use(
           console.log('e', item.name, e)
         }
       }))
+      result = result.filter((item) => item);
       result.sort((a, b) => b && a && (b.allRate - a.allRate));
+      const selectedItems = result.slice(3, 6).map(item => item.code);
+      const newDate = new Date;
+      if (newDate.getDay() === 1 && newDate.getHours() === 8) {
+        fs.writeFileSync(__dirname + '/preWeek.txt', selectedItems.join('\t\n'));
+      }
+      result.push((() => {
+        const preWeekSelected = result.filter((item) => item.preWeekSelected)
+        return {
+          name: '平均',
+          isAverage: true,
+          curWeekRate: result.reduce((total, item) => {
+            console.log(item.curWeekRate)
+            total += Number(item.curWeekRate);
+            return total;
+          }, 0) / result.length,
+          preWeekSelected: `${((preWeekSelected.reduce((total, item) => {
+            console.log(item.curWeekRate)
+            total += Number(item.curWeekRate);
+            return total;
+          }, 0) / preWeekSelected.length) * 100).toFixed(2)}%`
+        }
+      })());
       ctx.body = result.map((item) => {
         if (!item) {
           return item;
         }
-        item.allRate = `${((item.allRate) * 100).toFixed(2)}%`;
-        item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}%`;
-        item.fiveRate = `${((item.fiveRate) * 100).toFixed(2)}%`;
-        item.curRate = `${item.curRate}%`;
-        item.curWeekRate = `${((item.curWeekRate) * 100).toFixed(2)}%`;
+        item.allRate && (item.allRate = `${((item.allRate) * 100).toFixed(2)}%`);
+        item.beforeRate && (item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}%`);
+        item.fiveRate && (item.fiveRate = `${((item.fiveRate) * 100).toFixed(2)}%`);
+        item.curRate && (item.curRate = `${item.curRate}%`);
+        item.curWeekRate && (item.curWeekRate = `${((item.curWeekRate) * 100).toFixed(2)}%`);
         return item;
       })
   })

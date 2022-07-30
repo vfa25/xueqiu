@@ -1,6 +1,7 @@
 from selenium import webdriver  # pip3 install selenium
 from selenium.webdriver.chrome.options import Options
 import time
+from datetime import datetime
 
 class GetCookie:
     def __init__(self):
@@ -55,6 +56,10 @@ class GetCookie:
         self.driver.close()
         self.driver.quit()
 
+    def updatePreWeekSelect(self):
+        self.driver.get('http://10.vfa25.cn/')
+        time.sleep(5)
+
 
 if __name__ == '__main__':
     print()
@@ -63,5 +68,9 @@ if __name__ == '__main__':
     print('初始化浏览器成功')
     myCookie.generalDriver()
     print('初始化Driver成功')
+    if (datetime.now().weekday() == 0):
+        myCookie.updatePreWeekSelect()
+        print('更新上周选择成功')
     myCookie.getCookie()
     print('获取cookie成功')
+    
