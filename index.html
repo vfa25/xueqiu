@@ -14,6 +14,7 @@
 
 <body>
   <table id="table"></table>
+  <h5 style="margin: 20px 0">提示：以上日期均为交易日</h5>
 </body>
 
 <!-- Latest compiled and minified JavaScript -->
@@ -60,6 +61,13 @@
     }, {
       field: 'fiveRate',
       title: '5日',
+      align : 'center',
+      sortable: true,
+      cellStyle,
+      sorter,
+    }, {
+      field: 'curRate',
+      title: '当日',
       align : 'center',
       sortable: true,
       cellStyle,

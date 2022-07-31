@@ -121,6 +121,7 @@ app.use(
       }
       const cacheSelectedItems = (cacheSelectedStr && cacheSelectedStr.split('\t\n') || []).map((item) => item.trim()).filter(item => item);
       console.log('preWeek读文件', cacheSelectedItems);
+      let errFlag = false
       let result = await Promise.all(CONFIGS.map(async (item) => {
         try {
           const response = await axios.get(BEFORE_URL, {
@@ -149,7 +150,7 @@ app.use(
               return total;
             }, {})
           })
-          const curWeekStart = dayjs().startOf('week').toDate().getTime();
+          const curWeekStart = (new Date).getDay() === 0 ? dayjs().subtract(1, 'day').startOf('week').toDate().getTime() : dayjs().startOf('week').toDate().getTime();
           let nearLessItem = null;
           const curWeekItems = infoItems.filter((item, index) => {
             const isCurWeek = item.originTimestamp >= curWeekStart;
@@ -177,10 +178,13 @@ app.use(
             curWeekRate: curWeekRate || 0,
             preWeekSelected: cacheSelectedItems.includes(resData.symbol)
           };
-          console.log('单次请求', result.name);
+          console.log('单次请求', result);
           return result;
         } catch (e) {
-          console.log('error', item.name, e)
+          if (!errFlag) {
+            errFlag = true
+            console.log('error', e)
+          }
         }
       }))
       result = result.filter((item) => item);
