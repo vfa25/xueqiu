@@ -214,11 +214,11 @@ app.use(
         if (!item) {
           return item;
         }
-        item.allRate && (item.allRate = `${((item.allRate) * 100).toFixed(2)}%`);
-        item.beforeRate && (item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}%`);
-        item.fiveRate && (item.fiveRate = `${((item.fiveRate) * 100).toFixed(2)}%`);
-        item.curRate && (item.curRate = `${item.curRate}%`);
-        item.curWeekRate && (item.curWeekRate = `${((item.curWeekRate) * 100).toFixed(2)}%`);
+        item.hasOwnproperty('allRate') && (item.allRate = `${((item.allRate) * 100).toFixed(2)}%`);
+        item.hasOwnProperty('beforeRate') && (item.beforeRate = `${((item.beforeRate) * 100).toFixed(2)}%`);
+        item.hasOwnProperty('fiveRate') && (item.fiveRate = `${((item.fiveRate) * 100).toFixed(2)}%`);
+        item.hasOwnProperty('curRate') && (item.curRate = `${item.curRate}%`);
+        item.hasOwnProperty('curWeekRate') && (item.curWeekRate = `${((item.curWeekRate) * 100).toFixed(2)}%`);
         return item;
       })
   })
